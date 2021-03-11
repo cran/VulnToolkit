@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Troy D. Hill" />
+
+<meta name="date" content="2021-03-09" />
+
+<title>Analysis of tidal data</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Analysis of tidal data</h1>
+<h4 class="author">Troy D. Hill</h4>
+<h4 class="date">2021-03-09</h4>
+
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>The VulnToolkit R package provides tools for summarizing and analyzing tidal data. It also includes interfaces to <a href="https://www.tidesandcurrents.noaa.gov/stations.html?type=Water+Levels">National Oceanic and Atmospheric Administration datasets</a>, both time series data and station-level summary data for NOAA stations. This vignette deals with the former category, describing the functions useful in summary and analysis of tidal datasets.</p>
+</div>
+<div id="data-new-london-water-levels-at-6-minute-intervals" class="section level2">
+<h2>Data: New London water levels at 6 minute intervals</h2>
+<p>The <code>NL_6min_2013</code> sample dataset included with <strong>VulnToolkit</strong> includes a year of tidal data for the New London NOAA station. The data were collected at 6-minute intervals and were downloaded using the <code>VulnToolkit::noaa()</code> function.</p>
+</div>
+<div id="extracting-useful-information-from-tidal-time-series" class="section level2">
+<h2>Extracting useful information from tidal time series</h2>
+<div id="tides" class="section level3">
+<h3>Tides</h3>
+<p>One of the basic functions we might want to perform on a tidal dataset is identification of high and low tides. This is accomplished using the <code>HL()</code> function and the results can be quickly visualized with the <code>HL.plot</code> function. If there are NAs present in the water level or time datasets used as inputs to <code>HL</code> and <code>HL.plot</code>, a console message will report the presence of NAS. The NAs are not removed or otherwise acted upon in the function; it is up to the user to decide on the proper treatment of NAs before or after identifying tides. Small periods of missing data may not be consequential, but could cause a high or low tide to be inaccurately characterized. By visualizing the raw data and the high/low tides identified by <code>HL</code>, the <code>HL.plot</code> function can be a useful tool for evaluating data quality.</p>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>The <code>HL</code> and <code>HL.plot</code> functions take the same input arguments. <code>HL.plot</code> provides a simple means for the user to evaluate whether tides are being accurately identified, with high tides shown in red and low tides shown in blue, overlaid on the original water level time series. For long time series like the example above, it may be more informative to look closely at a subset of the data, to convince oneself that the high/low tides are correct.</p>
+<p>The default arguments in both of these functions are aimed at capturing semidiurnal tides. For a dataset with diurnal tides, the <code>period</code> argument should be adjusted to reflect the longer tidal period (~26 hours).</p>
+<p>Tides can be numbered using the <code>number.tides</code> function, helpful in quantifying material fluxes or in other analyses where tides are a unit of observation. This takes the high/low tides identified in the code above as an input argument.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">nos &lt;-<span class="st"> </span><span class="kw">number.tides</span>(<span class="dt">data =</span> NL_6min_<span class="dv">2013</span>, <span class="dt">datetime =</span> NL_6min_<span class="dv">2013</span>[,<span class="dv">1</span>], <span class="dt">hl =</span> HL.NL)</a></code></pre></div>
+</div>
+<div id="flooding-frequency-and-duration" class="section level3">
+<h3>Flooding frequency and duration</h3>
+<p>Additional functions allow flooding regimes to be characterized based on the frequency of flooding and its duration. As one use case, this information can serve as the basis for evaluating how some change in sea level might affect flooding regimes.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="co"># show how flooding frequency changes with elevation</span></a>
+<a class="sourceLine" id="cb2-2" title="2">elevs     &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">elev =</span> <span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="fl">1.5</span>, <span class="dt">by =</span> <span class="fl">0.005</span>))</a>
+<a class="sourceLine" id="cb2-3" title="3">elevs<span class="op">$</span>frq &lt;-<span class="st"> </span><span class="kw">fld.frq</span>(<span class="dt">z =</span> elevs<span class="op">$</span>elev, </a>
+<a class="sourceLine" id="cb2-4" title="4">                     <span class="dt">ht =</span> HL.NL<span class="op">$</span>level[HL.NL<span class="op">$</span>tide <span class="op">==</span><span class="st"> &quot;H&quot;</span>])</a>
+<a class="sourceLine" id="cb2-5" title="5"></a>
+<a class="sourceLine" id="cb2-6" title="6"><span class="kw">plot</span>(elev <span class="op">~</span><span class="st"> </span>frq, <span class="dt">data =</span> elevs, <span class="dt">pch =</span> <span class="dv">19</span>, <span class="dt">cex =</span> <span class="fl">0.6</span>, <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>,</a>
+<a class="sourceLine" id="cb2-7" title="7">     <span class="dt">xlab =</span> <span class="st">&quot;flooding frequency (% of tides)&quot;</span>,</a>
+<a class="sourceLine" id="cb2-8" title="8">     <span class="dt">ylab =</span> <span class="st">&quot;elevation (m)&quot;</span>)</a>
+<a class="sourceLine" id="cb2-9" title="9"></a>
+<a class="sourceLine" id="cb2-10" title="10"><span class="co"># Let&#39;s look more closely at an elevation of interest: mean high water</span></a>
+<a class="sourceLine" id="cb2-11" title="11">MHW &lt;-<span class="st"> </span><span class="kw">mean</span>(HL.NL<span class="op">$</span>level[HL.NL<span class="op">$</span>tide <span class="op">==</span><span class="st"> &quot;H&quot;</span>])</a>
+<a class="sourceLine" id="cb2-12" title="12"><span class="kw">abline</span>(<span class="dt">h =</span> MHW, <span class="dt">lty =</span> <span class="dv">2</span>) <span class="co"># add MHW line to plot</span></a></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="co"># number of flooding tides at MHW</span></a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="kw">fld.frq</span>(<span class="dt">z =</span> MHW, <span class="dt">ht =</span> HL.NL<span class="op">$</span>level[HL.NL<span class="op">$</span>tide <span class="op">==</span><span class="st"> &quot;H&quot;</span>], <span class="dt">units =</span> <span class="st">&quot;tides&quot;</span>) </a></code></pre></div>
+<pre><code>## [1] 368</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="co"># flooding tides as a proportion of all tides in dataset</span></a>
+<a class="sourceLine" id="cb5-2" title="2"><span class="kw">fld.frq</span>(<span class="dt">z =</span> MHW, <span class="dt">ht =</span> HL.NL<span class="op">$</span>level[HL.NL<span class="op">$</span>tide <span class="op">==</span><span class="st"> &quot;H&quot;</span>], <span class="dt">units =</span> <span class="st">&quot;percent&quot;</span>)  </a></code></pre></div>
+<pre><code>## [1] 0.5219858</code></pre>
+</div>
+<div id="flooding-depth" class="section level3">
+<h3>Flooding depth</h3>
+<p>The depth of an average flooding event is another parameter describing a flooding regime. The <code>fld.depth</code> function reports the median depth from the observed flooding events along an elevation gradient.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">elevs<span class="op">$</span>median.depth &lt;-<span class="st"> </span><span class="kw">fld.depth</span>(<span class="dt">elevation =</span> elevs<span class="op">$</span>elev,</a>
+<a class="sourceLine" id="cb7-2" title="2">                     <span class="dt">level =</span> NL_6min_<span class="dv">2013</span>[, <span class="dv">2</span>])</a>
+<a class="sourceLine" id="cb7-3" title="3"><span class="kw">plot</span>(elevs<span class="op">$</span>elev <span class="op">~</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb7-4" title="4"><span class="st">       </span>elevs<span class="op">$</span>median.depth , </a>
+<a class="sourceLine" id="cb7-5" title="5">     <span class="dt">pch =</span> <span class="dv">19</span>, <span class="dt">cex =</span> <span class="fl">0.6</span>, <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>, </a>
+<a class="sourceLine" id="cb7-6" title="6">     <span class="dt">xlab =</span> <span class="st">&quot;median flooding depth (m)&quot;</span>,</a>
+<a class="sourceLine" id="cb7-7" title="7">     <span class="dt">ylab =</span> <span class="st">&quot;elevation (m)&quot;</span>)</a>
+<a class="sourceLine" id="cb7-8" title="8"><span class="kw">abline</span>(<span class="dt">h =</span> MHW, <span class="dt">lty =</span> <span class="dv">2</span>) <span class="co"># line indicates MHW</span></a></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+<div id="duration-of-individual-flooding-events" class="section level3">
+<h3>Duration of individual flooding events</h3>
+<p>The duration of an average flooding event can be an important metric for the flooding stress experienced by organisms occupying a wetland. This measure of the flooding regime also varies as a non-linear function of elevation:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">elevs<span class="op">$</span>events &lt;-<span class="st"> </span><span class="kw">dur.events</span>(<span class="dt">elevation =</span> elevs<span class="op">$</span>elev, </a>
+<a class="sourceLine" id="cb8-2" title="2">                     <span class="dt">level =</span> NL_6min_<span class="dv">2013</span>[, <span class="dv">2</span>])</a>
+<a class="sourceLine" id="cb8-3" title="3"><span class="kw">plot</span>(elevs<span class="op">$</span>elev[<span class="op">!</span><span class="kw">is.na</span>(elevs<span class="op">$</span>events)] <span class="op">~</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb8-4" title="4"><span class="st">       </span><span class="kw">I</span>(<span class="kw">log</span>(elevs<span class="op">$</span>events[<span class="op">!</span><span class="kw">is.na</span>(elevs<span class="op">$</span>events)])) , </a>
+<a class="sourceLine" id="cb8-5" title="5">     <span class="dt">pch =</span> <span class="dv">19</span>, <span class="dt">cex =</span> <span class="fl">0.6</span>, <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>, </a>
+<a class="sourceLine" id="cb8-6" title="6">     <span class="dt">xlab =</span> <span class="st">&quot;median flooding event (hours; log scale)&quot;</span>,</a>
+<a class="sourceLine" id="cb8-7" title="7">     <span class="dt">ylab =</span> <span class="st">&quot;elevation (m)&quot;</span>)</a>
+<a class="sourceLine" id="cb8-8" title="8"><span class="kw">abline</span>(<span class="dt">h =</span> MHW, <span class="dt">lty =</span> <span class="dv">2</span>) <span class="co"># line indicates MHW</span></a></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
