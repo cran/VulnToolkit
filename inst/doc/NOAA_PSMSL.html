@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Troy D. Hill" />
+
+<meta name="date" content="2021-05-03" />
+
+<title>Accessing NOAA data</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Accessing NOAA data</h1>
+<h4 class="author">Troy D. Hill</h4>
+<h4 class="date">2021-05-03</h4>
+
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>The VulnToolkit R package provides tools for summarizing and analyzing tidal data. It also includes interfaces to <a href="https://www.psmsl.org">Permanent Service for Mean Sea Level (PSMSL)</a> data and time series data and station-level summary data collected by <a href="https://www.tidesandcurrents.noaa.gov/stations.html?type=Water+Levels">National Oceanic and Atmospheric Administration (NOAA) datasets</a>. This vignette describes the functions that interact with NOAA and PSMSL databases.</p>
+</div>
+<div id="an-important-note" class="section level2">
+<h2>An important note</h2>
+<p>Functions that interact with web sites are challenging to work with and troubleshoot. There are many more potential sources of trouble, which makes problems difficult to isolate. Workplaces may block R from interacting with web sites. A user’s internet or the web site may be down or be slow to respond. A recent change to the website may have been incompatible with the code.</p>
+<p>One small step that can be taken to minimize these frustrating issues is to verify that your computer has curl installed and accessible. <code>VulnToolkit</code> uses curl to interact with web sites. The availability of curl can be checked by running the command <code>Sys.which(&quot;curl&quot;)</code> and verifying that the curl executable is listed.</p>
+</div>
+<div id="accessing-noaa-tides-and-currents-data" class="section level2">
+<h2>Accessing NOAA Tides and Currents data</h2>
+<p>NOAA stations are referred to by their station numbers, which are available on the Tides and Currents station page linked above. We’ll use the New London, CT station (station no. 8461490).</p>
+<p>Data can be downloaded with a call to <code>noaa</code>:</p>
+<p>A benefit of <code>VulnToolkit</code> is that it accommodates NOAA download limits by breaking up large data requests into multiple smaller requests, and merging the result. By doing this, a user can quickly download multiple years of 6-minute data.</p>
+<p>Some NOAA stations also collect meteorological data. If available (check with <code>noaa.parameters(stn = &quot;8461490&quot;)</code>), meteorological data can be downloaded in the <code>noaa()</code> call by setting <code>met = TRUE</code>.</p>
+<div id="noaa-station-information" class="section level3">
+<h3>NOAA station information</h3>
+<p><code>VulnToolkit</code> provides access to station-level data such as tidal datums and harmonic constituents.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">bport.datums   &lt;-<span class="st"> </span><span class="kw">noaa.datums</span>(<span class="dt">station =</span> <span class="dv">8461490</span>) <span class="co"># New London, CT</span></a>
+<a class="sourceLine" id="cb1-2" title="2">battery.datums &lt;-<span class="st"> </span><span class="kw">noaa.datums</span>(<span class="dt">station =</span> <span class="dv">8518750</span>) <span class="co"># Battery, NYC</span></a>
+<a class="sourceLine" id="cb1-3" title="3"></a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="co">### retrieve harmonic constituents</span></a>
+<a class="sourceLine" id="cb1-5" title="5">bport.cons &lt;-<span class="st"> </span><span class="kw">harcon</span>(<span class="dt">station =</span> <span class="dv">8461490</span>) <span class="co"># New London, CT</span></a>
+<a class="sourceLine" id="cb1-6" title="6">bport.cons</a>
+<a class="sourceLine" id="cb1-7" title="7"></a>
+<a class="sourceLine" id="cb1-8" title="8"><span class="co">### calculate form number </span></a>
+<a class="sourceLine" id="cb1-9" title="9">formDat  &lt;-<span class="st"> </span><span class="kw">form.no</span>(<span class="dt">station =</span> <span class="dv">8461490</span>) <span class="co"># New London, CT</span></a>
+<a class="sourceLine" id="cb1-10" title="10"><span class="co">### Multiple stations at once:</span></a>
+<a class="sourceLine" id="cb1-11" title="11">stn.list &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;8467150&quot;</span>, <span class="st">&quot;8461490&quot;</span>, <span class="st">&quot;9454240&quot;</span>) </a>
+<a class="sourceLine" id="cb1-12" title="12">formDat2 &lt;-<span class="st"> </span><span class="kw">form.no</span>(stn.list)</a></code></pre></div>
+</div>
+</div>
+<div id="accessing-permanent-service-for-mean-sea-level-data" class="section level2">
+<h2>Accessing Permanent Service for Mean Sea Level data</h2>
+<p>PSMSL data is accessed by two functions. <code>psmsl.stations</code> returns a dataframe with all of the PSMSL stations, and <code>psmsl</code> provides an interface to the actual sea level data. PSMSL data are in monthly or annual time scales, and span the globe.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">psmsl.stns &lt;-<span class="st"> </span><span class="kw">psmsl.stations</span>(<span class="dt">country =</span> <span class="st">&quot;USA&quot;</span>, <span class="dt">sort.by =</span> <span class="st">&quot;name&quot;</span>)</a>
+<a class="sourceLine" id="cb2-2" title="2"> </a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="co">### using the psmsl.stations call to define stations</span></a>
+<a class="sourceLine" id="cb2-4" title="4">data.v1 &lt;-<span class="st"> </span><span class="kw">psmsl</span>(<span class="dt">station =</span> psmsl.stns[<span class="kw">c</span>(<span class="dv">42</span>, <span class="dv">70</span>), <span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb2-5" title="5"></a>
+<a class="sourceLine" id="cb2-6" title="6"><span class="co">### call stations by name or ID</span></a>
+<a class="sourceLine" id="cb2-7" title="7">data.v2 &lt;-<span class="st"> </span><span class="kw">psmsl</span>(<span class="dt">station =</span> <span class="kw">c</span>(<span class="st">&quot;DEPOE BAY&quot;</span>, <span class="st">&quot;JUNEAU&quot;</span>), <span class="dt">interval =</span> <span class="st">&quot;monthly&quot;</span>)</a>
+<a class="sourceLine" id="cb2-8" title="8">data.v3 &lt;-<span class="st"> </span><span class="kw">psmsl</span>(<span class="dt">station =</span> <span class="kw">c</span>(<span class="dv">1372</span>, <span class="dv">12</span>), <span class="dt">interval =</span> <span class="st">&quot;monthly&quot;</span>)</a>
+<a class="sourceLine" id="cb2-9" title="9">data.v4 &lt;-<span class="st"> </span><span class="kw">psmsl</span>(<span class="dt">station =</span> <span class="kw">c</span>(<span class="st">&quot;DEPOE BAY&quot;</span>, <span class="dv">12</span>), <span class="dt">interval =</span> <span class="st">&quot;monthly&quot;</span>)</a></code></pre></div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

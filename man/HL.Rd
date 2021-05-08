@@ -4,7 +4,15 @@
 \alias{HL}
 \title{Extracts high and low tides from a record of water levels}
 \usage{
-HL(level, time, period = 13, phantom = TRUE, tides = "all", semidiurnal = TRUE)
+HL(
+  level,
+  time,
+  period = 13,
+  phantom = TRUE,
+  tides = "all",
+  semidiurnal = TRUE,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{level}{a numeric vector of water levels}
@@ -16,25 +24,54 @@ level measurements. Units must be minutes.}
 (full tidal cycle). Units must be hours.}
 
 \item{phantom}{a protective measure taken to prevent the inclusion of an 
-artificial high or low tide at the end of the dataset. If the water level 
+artificial ('phantom') high or low tide at the end of the dataset, which occurs because the final observation is always a local maxima/minima for the period following the previous low/high tide. If the water level 
 measurements end precisely at a low or high tide, this can be changed to FALSE.}
 
 \item{tides}{is used to optionally subset the output to include 
 only high or low tides. This argument can be 'all' (default), 'H', or 'L'}
 
-\item{semidiurnal}{logical. If TRUE, higher- and lower- high/low tides are reported in a separate column called 'tide2'}
+\item{semidiurnal}{logical. If TRUE, higher- and lower- high/low tides are reported in a separate column called 'tide2'. Tides are grouped by day and assigned higher- or lower- status. When a single high or low tide exists in a day, tides on adjacent days are used to make an assignment.}
+
+\item{verbose}{logical. If TRUE, messages are returned to console identifying the presence of NAs in the input data}
 }
 \value{
 a dataframe of tide levels, associated time stamps, and tide 
-type ('H' or 'L'). If there are NAs present in the water level or time datasets, a message reports this information in the console but the NAs are not removed or otherwise acted upon.
+type ('H' or 'L'). If there are NAs present in the water level or time datasets, a message reports this information in the console but the NAs are not removed or otherwise acted upon. The column indicating semidiurnal tides (`tide2`) may be NA if tides are identical or in cases where there is a single tide in the first day of the dataset.
 }
 \description{
-Extracts high and low tides from a record of water levels
+Extracts high and low tides from a record of water levels. For reliable results, the time interval between samples must be constant throughout the dataset (e.g., 1 sample per hour, 1 sample per 6 minutes). Datasets with irregularly-spaced observations should be expanded to the smallest time interval to avoid issues.
 }
 \examples{
-data(NL_6min_2013)
 HL.NL <- VulnToolkit::HL(level = NL_6min_2013[,2], time = NL_6min_2013[,1])
 head(HL.NL)
+
+\dontrun{
+### Important note: Problems arise when using irregularly-spaced data.
+### The best solution is for the user to ensure their data are evenly-spaced.
+### An example:
+### 
+### pull data at 6-minute intervals
+dat.hr   <- noaa(begindate = "20200101", enddate = "20200630", station = "8467150",
+                 interval = "hourly")
+
+### pull data at 1-hr intervals
+dat.6min <- noaa(begindate = "20200701", enddate = "20201231", station = "8467150",
+                 interval = "6 minute")
+
+dat.combined <- rbind(dat.hr, dat.6min)
+### if time interval is inconsistent the HL output can be unreliable
+HL.plot(level = dat.combined[, 2], time = dat.combined[, 1]) 
+
+### expand 1-hr dataset using the 6-minute time interval
+timeSeq <- data.frame(time_GMT = seq.POSIXt(from = min(dat.hr$time_GMT), 
+                                            to = max(dat.hr$time_GMT), 
+                                            by = "6 min"))
+### create consistently-spaced dataset
+dat.hr2       <- plyr::join_all(list(timeSeq, dat.hr))
+dat.combined2 <- rbind(dat.hr2, dat.6min)
+HL.plot(level = dat.combined2[, 2], time = dat.combined2[, 1]) 
+}
+
 }
 \seealso{
 \code{\link{HL.plot}}

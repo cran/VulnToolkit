@@ -1,8 +1,8 @@
 Package: VulnToolkit
 Type: Package
 Title: Analysis of Tidal Datasets
-Version: 1.1.2
-Date: 2021-04-16
+Version: 1.1.3
+Date: 2021-05-03
 Authors@R: c(
     person("Troy", "Hill", role = c("aut", "cre"), email = "Hill.Troy@gmail.com", comment = c(ORCID = "0000-0003-2980-4099")),
     person("Shimon", "Anisfeld", role = "ctb")
@@ -18,9 +18,9 @@ Suggests: covr, testthat, knitr, rmarkdown
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2021-04-16 15:21:20 UTC; tdh
+Packaged: 2021-05-03 19:36:12 UTC; tdh
 Author: Troy Hill [aut, cre] (<https://orcid.org/0000-0003-2980-4099>),
   Shimon Anisfeld [ctb]
 Maintainer: Troy Hill <Hill.Troy@gmail.com>
 Repository: CRAN
-Date/Publication: 2021-04-16 16:30:03 UTC
+Date/Publication: 2021-05-08 21:00:03 UTC
