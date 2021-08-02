@@ -1,7 +1,7 @@
-7ec0ddc8228e6d448727cf31c791a49e *DESCRIPTION
+4e35dd1e9e593e03bf62ab2ccfb1c2f2 *DESCRIPTION
 eee2fa97297e2955867c168a06db68b6 *INDEX
 1c8d885aecea1acf03b3e17358397ffb *NAMESPACE
-48abe4cff66034fc23b5460595d58ff0 *NEWS
+4f29be8d2e764063e93e2f243941e757 *NEWS
 f43e9d614f6efb141dd0e65fb84d4983 *R/HL.r
 67bd18e9b672d7179d5603b915ffd97c *R/HL_plot.R
 0c0a3ae218964c87f9f7ff40078a5e21 *R/dur_bias.R
@@ -11,7 +11,7 @@ ba1accaa8480dcc38925c78ae4ec2764 *R/fldDurEvents.R
 63bd5eb20d5b3c41d48a295044d9591c *R/floodDepth.R
 7155a0dc0e7d11063219b9b09f03cf0e *R/form_no.R
 45e82e70a572b68e0b6eb79f322091b6 *R/harcon.R
-6c71e1434ecbcab5c48deffc33061911 *R/noaa.r
+1578326e801414e61b166e578a7de81d *R/noaa.r
 b21f18252a958c3878d76d798675e392 *R/noaaParameters.R
 21a15529e7e5227829b4ece6eef2bc8c *R/noaa_datums.R
 ebaa982e1c1fe9746f2e8c6d686d2c45 *R/number_tides.R
@@ -19,16 +19,16 @@ ebaa982e1c1fe9746f2e8c6d686d2c45 *R/number_tides.R
 38946361e04a1da4cf1af4c2cdd2c84c *R/psmsl_stations.R
 2188b55e8e3df5924a60ae1438420c97 *R/waveDur.R
 4c73f8fff87aa12b4fd83bb6b4bb370b *README.md
-b4aac3ef129fb1804e6ea4b767b81451 *build/vignette.rds
+56e4cddf1d9d70d7a45e6a689508a009 *build/vignette.rds
 0a5b9a2656d64ae313be5d42ad900779 *data/NL_6min_2013.RData
 e914cd343454352ef2ca84723a95806b *data/datalist
 393df1d086e56b59dac7c45e85259c4f *inst/CITATION
 bfc71a5d886395902289edb21f27c37a *inst/doc/NOAA_PSMSL.R
 17647cdba71968c426a500bdac9e4a10 *inst/doc/NOAA_PSMSL.Rmd
-64289ae5221077bc642b512a6bc4f367 *inst/doc/NOAA_PSMSL.html
+80310bd00b994cf831a23840b6555b21 *inst/doc/NOAA_PSMSL.html
 7d042a46382c53f3a4b8a6ab67252b26 *inst/doc/Tidal_data.R
 b509a25c014496ab1e44931b7ef80f5f *inst/doc/Tidal_data.Rmd
-091df0f4ac2bd3974b37f762285278ab *inst/doc/Tidal_data.html
+6fe30edb99e4c6d22cacf42392b93c5a *inst/doc/Tidal_data.html
 0cef6cdf249d8f3690163723f4a5b8b1 *man/HL.Rd
 5359aacfc03149c1130fd713e3a4dca5 *man/HL.plot.Rd
 7c82ddfefc25d706dd2aee9ad99611ca *man/NL_6min_2013.Rd
@@ -39,7 +39,7 @@ b509a25c014496ab1e44931b7ef80f5f *inst/doc/Tidal_data.Rmd
 46db068fa5468e6c9b909d25dcc822af *man/fld.frq.Rd
 b9a1fd74553cd3bed6b695f53cc356c7 *man/form.no.Rd
 fab4a2f0a7976b7f33637495fa16d04b *man/harcon.Rd
-eb912ce568c07857cb679c82d1f05f81 *man/noaa.Rd
+459e7c5cdbb18e15a7bc7d2d01cb1e71 *man/noaa.Rd
 3a11d5fa4cf6eb4bf415b6ac36b6dc75 *man/noaa.datums.Rd
 a35df3262f98ff99da0c8576b75fb845 *man/noaa.parameters.Rd
 a8800fa60a9a6080828462ee32668398 *man/number.tides.Rd
